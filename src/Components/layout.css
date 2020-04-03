@@ -1,0 +1,197 @@
+.wrapper{
+    display: flex;
+    flex-direction: column;
+    /* flex: 1; */
+    height: 100vh;
+}
+.dash{
+  flex:2;
+  /* border:1px solid black; */
+  display: flex;
+}
+.dashInput{
+    flex:4;
+    /* border:1px solid black; */
+    display: flex;
+    flex-direction: column;
+}
+.buyCrypto{
+    flex: 1 1;
+    /* border: 1px solid black; */
+    display: flex;
+    align-items: flex-end;
+    padding-left: 1.5rem;
+    /* border:1px solid black; */
+}
+.inputCurr{
+    flex:2;
+    /* border:1px solid black; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.refundAddress{
+    flex:1;
+    /* border:1px solid black; */
+}
+.dashLoader{
+    flex:1;
+    /* border:1px solid black; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.dashOutput{
+    flex:4;
+    /* border:1px solid black; */
+    display: flex;
+    flex-direction: column;
+}
+.marketRate{
+    flex: 1 1;
+    display: flex;
+    align-items: center;
+    padding-left: 2rem;
+    justify-content: space-between;
+}
+.checkedWrapper{
+    padding-right: 2rem;
+}
+
+.outputCurr{
+    flex:2;
+    /* border:1px solid black; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+.refundOutputAddress{
+    flex:1;
+    /* border:1px solid black; */
+    display:flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+
+.exchange{
+    flex:2;
+    /* border:1px solid black; */
+    display: flex;
+    flex-direction: column;
+}
+.exchangeTab{
+    flex:4;
+    display: flex;
+    /* border: 1px solid black; */
+}
+.sending{
+    /* border: 1px solid black; */
+    flex:4;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.wrapsend{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.sendingMsg{
+
+}
+.sendingAmount{
+    font-size: 2rem;
+}
+.sendingAmount sup{
+    font-size:20px;
+}
+.arrow{
+    /* border: 1px solid black; */
+    flex:1;
+    display: flex;
+    justify-content: center;
+    align-items: center
+}
+.receiving{
+    /* border: 1px solid black; */
+    flex: 4 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.receivingAmount{
+    font-size: 2rem;
+}
+.receivingAmount sup{
+    font-size: 20px;
+}
+.wrapreceive{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+}
+.receivingMsgWithIcon{
+    display: flex;
+}
+.poweredBy{
+    /* border: 1px solid black; */
+    flex:2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+.accept{
+    flex:4;
+    /* border:1px solid black; */
+}
+.termsCondition{
+    display: flex;
+    justify-content: center;
+}
+.submit{
+    padding: 20px;
+}
+a{
+    text-decoration: none;
+}
+
+.logoSize{
+    height: 20px;
+    width:20px;
+    /* margin-right: 40px, */
+}
+.logoSize1{
+    /* height: 20px;
+    width:20px; */
+    padding-right: 40px,
+
+}
+.renderOption{
+    display: flex;
+    /* justify-content: space-between; */
+    align-items: center;
+}
+
+@media all and (max-width:950px){
+    .dash{
+        flex:4;
+        /* border:1px solid black; */
+        display: flex;
+        flex-direction: column;
+    }
+    .exchange{
+        flex:4;
+    }
+    .accept{
+        flex:2;
+    }
+}
