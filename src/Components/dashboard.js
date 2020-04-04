@@ -1,11 +1,9 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './layout.css';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import AutorenewTwoToneIcon from '@material-ui/icons/AutorenewTwoTone';
 import Switch from "@material-ui/core/Switch";
-import axios from 'axios';
-// import CircularProgress from "@material-ui/core/CircularProgress";
 import ArrowRightAltRoundedIcon from '@material-ui/icons/ArrowRightAltRounded';
 import Tooltip from '@material-ui/core/Tooltip';
 import InfoRoundedIcon from '@material-ui/icons/InfoRounded';
@@ -13,23 +11,22 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from './alert';
-import {coinapi, rateapi} from '../Api/api'
-// import MuiAlert from "@material-ui/lab/Alert";
-// import Alert from '@material-ui/lab/Alert';
-// import { makeStyles } from "@material-ui/core/styles";
-// import { display } from '@material-ui/system';
+import {coinapi, rateapi} from '../Api/api';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 class Dashboard extends React.PureComponent {
-
 state = {
     checkedA: false,
     progress:0,
     checkBox: true,
+    isLoading: false,
     dataDropdown:[],
     sendCoin:1,
     currencySend:"btc",
+    currencySendName:"Bitcoin",
     receiveCoin:"",
-    currencyReceive: "usd",
+    currencyReceive: "trx",
+    currencyReceiveName:"TRON",
     flag: false, 
     exchangeRate: "",
     toasterFlag: false,
@@ -42,33 +39,15 @@ componentDidMount(){
         depositCoin: this.state.currencySend,
         destinationCoin: this.state.currencyReceive
     }
-   
-    //using middleware to overcome CORS problem
-    // axios.get('https://cors-anywhere.herokuapp.com/https://api.coinswitch.co/v2/coins', {
-    //     'headers': {
-    //         'x-api-key': 't41E6v16mG6xqOUK74E2F7Py6UVng4K6n1pO3Jig' ,
-    //         'x-user-ip': '1.1.1.1'
-    //         }
-    //     })
-    // axios.all([coinapi(),rateapi(payload)])
-    // .then(axios.spread((...responses) => {
-    //     const responseOne = responses[0]
-    //     const responseTwo = responses[1]
-    //     console.log(responses[0]);
-    //     console.log(responses[1])
-    //     this.setState({dataDropdown:responses[0].data.data,currencySend: "btc",flag: false, exchangeRate: responses[1].data.data.rate });
-
-    //     // use/access the results 
-    //   }))
-    // .catch((e)=>{
-    //     console.log(e)
-    // })
-
+    this.setState({isLoading: true})
     coinapi().then((res)=>{
         console.log(res.data.data);
-        this.setState({dataDropdown:res.data.data,currencySend: "btc" })
+        this.setState({dataDropdown:res.data.data,currencySend: "btc", isLoading: false })
     })
-    .catch((e)=>console.log(e));
+    .catch((e)=>{
+        console.log(e);
+        this.setState({isLoading: false})
+    });
 
     rateapi(payload)
     .then((res)=>{
@@ -76,16 +55,17 @@ componentDidMount(){
         const data = res.data;
         console.log(res)
         if(data.success){
-            this.setState({flag: false, exchangeRate: data.data.rate})
+            this.setState({flag: false, exchangeRate: data.data.rate, isLoading: false })
             
         }
         else{
-            this.setState({toasterFlag: true, errorMsg: data.msg})
+            this.setState({toasterFlag: true, errorMsg: data.msg, isLoading: false,exchangeRate:"" })
         }
         
     })
     .catch(e=> {
-        console.log(e)
+        console.log(e);
+        this.setState({isLoading: false, exchangeRate:""})
         // this.setState({toasterFlag: true, errorMsg: d.msg})
     })
 
@@ -95,29 +75,25 @@ componentDidMount(){
 componentDidUpdate(prevProps,prevState){
 
     if(prevState.flag !== this.state.flag){
-
+        this.setState({isLoading: true})
         const payload = {
             depositCoin: this.state.currencySend,
             destinationCoin: this.state.currencyReceive
         }
-
         console.log('flag change')
         rateapi(payload)
         .then((res)=>{
-            console.log(res.data.data)
             const data = res.data;
             console.log(res)
             if(data.success){
-                this.setState({flag: false, exchangeRate: data.data.rate})
-               
+                this.setState({flag: false, exchangeRate: data.data.rate, isLoading: false})
             }
             else{
-                this.setState({toasterFlag: true, errorMsg: data.msg})
+                this.setState({toasterFlag: true, errorMsg: data.msg, isLoading: false, exchangeRate:""})
             }
         })
         .catch(e => {
-            console.log(e)
-            // this.setState({toasterFlag: true, errorMsg: e.msg})
+            this.setState({isLoading: false, exchangeRate:""})
         })
     }
 }
@@ -134,7 +110,7 @@ onChange = (e) => {
 
 sendDrop = (value) => {
     if(value){
-        this.setState({currencySend : value.symbol, flag: !this.state.flag});
+        this.setState({currencySend : value.symbol, flag: !this.state.flag, currencySendName: value.name});
         // this.getExchange();
         // this.setState({flag: false})
     }
@@ -146,7 +122,7 @@ sendDrop = (value) => {
 
 receiveDrop = (value) => {
     if(value){
-        this.setState({currencyReceive : value.symbol, flag: !this.state.flag});
+        this.setState({currencyReceive : value.symbol, flag: !this.state.flag, currencyReceiveName: value.name});
     }
     else{
         this.setState({currencyReceive : null})
@@ -159,12 +135,14 @@ handleClose = () => {
 }
 
 render() {
+    console.log(typeof this.state.exchangeRate)
+    console.log(this.state.exchangeRate)
     return (
         <div className="wrapper">
             <div className = "dash">
                 <div className = "dashInput">
                     <div className= "buyCrypto">
-                       Send {this.state.currencySend} 
+                       Send {this.state.currencySendName} 
                     </div>
                         <div className= "inputCurr">
                           <TextField variant="outlined" style={{ flex:0.5 }}  value={this.state.sendCoin} name="sendCoin" onChange = {this.onChange}  />
@@ -190,12 +168,12 @@ render() {
                         </div>
                     </div>
                     <div className = "dashLoader">
-                      <AutorenewTwoToneIcon />
+                      <AutorenewTwoToneIcon className="idealSpinner"/>
                     </div>
                     <div className = "dashOutput">
                     
                         <div className = "marketRate">
-                            <div>Get {this.state.currencyReceive}</div>
+                            <div>Get {this.state.currencyReceiveName}</div>
                             <div className = "checkedWrapper">
                                 <span>Market Rate</span>
                                 <Switch
@@ -208,7 +186,7 @@ render() {
                             </div> 
                         </div>
                         <div className = "outputCurr">
-                            <TextField variant="outlined" style={{ flex:0.5 }} disabled value = {this.state.exchangeRate*this.state.sendCoin}/>
+                            <TextField variant="outlined" style={{ flex:0.5 }} disabled  value= {this.state.exchangeRate ? this.state.exchangeRate*this.state.sendCoin: "..."}/>
                             <Autocomplete
                                 onChange = {(event, value)=>this.receiveDrop(value)} 
                                 id="currencyReceive"
@@ -233,12 +211,23 @@ render() {
 
                 </div>
                 {this.state.toasterFlag ? 
-                <Snackbar open={this.state.toasterFlag} autoHideDuration={6000} onClose={this.handleClose} anchorOrigin={{ vertical: "center", horizontal: "center"}}>
+                <Snackbar open={this.state.toasterFlag} autoHideDuration={6000} onClose={this.handleClose}   anchorOrigin={{ vertical: 'top', horizontal:'center'}}>
                     <Alert onClose={this.handleClose} severity="error">
                       {this.state.errorMsg}
                     </Alert>
                 </Snackbar>
                 : null }
+
+                <div className="loaderSpace">
+                    {this.state.isLoading ? 
+                        <div className = "loaderPos">
+                        <CircularProgress/> 
+                        </div>
+                    : null} 
+                </div>
+
+                
+          
                 <div className = "exchange">
                     <div className = "exchangeTab">
                         <div className="sending">
@@ -255,7 +244,7 @@ render() {
                          
                         </div>
                         <div className="arrow">
-                          <ArrowRightAltRoundedIcon />
+                          <ArrowRightAltRoundedIcon className="idealSpinner" />
   
                         </div>
                         <div className="receiving">
@@ -272,7 +261,7 @@ render() {
                                 </div>
                          
                                 <div className="receivingAmount">
-                                   {this.state.exchangeRate*this.state.sendCoin} <sup>{this.state.currencyReceive}</sup>
+                                   {this.state.exchangeRate ? this.state.exchangeRate*this.state.sendCoin: "..."} <sup>{this.state.currencyReceive}</sup>
                                 </div>
                             </div>
                         </div>

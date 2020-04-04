@@ -102,7 +102,7 @@ function ResponsiveDrawer(props) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap>
-            Responsive drawer
+            Coin Switch
           </Typography>
         </Toolbar>
       </AppBar>

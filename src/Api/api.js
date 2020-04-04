@@ -1,5 +1,4 @@
 import axios from 'axios';
-
 const middleware = 'https://cors-anywhere.herokuapp.com/';
 const headers = {
     'x-api-key': 't41E6v16mG6xqOUK74E2F7Py6UVng4K6n1pO3Jig' ,
