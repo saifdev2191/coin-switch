@@ -1,5 +1,4 @@
 import React from 'react';
-import './layout.css';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import AutorenewTwoToneIcon from '@material-ui/icons/AutorenewTwoTone';
@@ -10,9 +9,10 @@ import InfoRoundedIcon from '@material-ui/icons/InfoRounded';
 import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
-import Alert from './alert';
 import {coinapi, rateapi} from '../Api/api';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import './layout.css';
+import Alert from './alert';
 
 class Dashboard extends React.PureComponent {
 state = {
@@ -31,7 +31,6 @@ state = {
     exchangeRate: "",
     toasterFlag: false,
     errorMsg:""
-    // sendCoinSelected:"",
 }
 
 componentDidMount(){
@@ -66,7 +65,6 @@ componentDidMount(){
     .catch(e=> {
         console.log(e);
         this.setState({isLoading: false, exchangeRate:""})
-        // this.setState({toasterFlag: true, errorMsg: d.msg})
     })
 
     
@@ -80,7 +78,6 @@ componentDidUpdate(prevProps,prevState){
             depositCoin: this.state.currencySend,
             destinationCoin: this.state.currencyReceive
         }
-        console.log('flag change')
         rateapi(payload)
         .then((res)=>{
             const data = res.data;
@@ -111,8 +108,6 @@ onChange = (e) => {
 sendDrop = (value) => {
     if(value){
         this.setState({currencySend : value.symbol, flag: !this.state.flag, currencySendName: value.name});
-        // this.getExchange();
-        // this.setState({flag: false})
     }
     else{
         this.setState({currencySend : null});
@@ -211,8 +206,8 @@ render() {
 
                 </div>
                 {this.state.toasterFlag ? 
-                <Snackbar open={this.state.toasterFlag} autoHideDuration={6000} onClose={this.handleClose}   anchorOrigin={{ vertical: 'top', horizontal:'center'}}>
-                    <Alert onClose={this.handleClose} severity="error">
+                <Snackbar  open={this.state.toasterFlag}  onClose={this.handleClose} anchorOrigin={{ vertical: 'center', horizontal:'center'}}>
+                    <Alert onClose={this.handleClose} severity="error" style={{width: "700px"}}>
                       {this.state.errorMsg}
                     </Alert>
                 </Snackbar>
