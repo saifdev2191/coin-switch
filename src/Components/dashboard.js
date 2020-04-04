@@ -100,8 +100,6 @@ handleCheckBox = (event) => {
 };
 
 onChange = (e) => {
-    console.log(e.target.value)
-    console.log(e.target.name)
     this.setState({[e.target.name] : e.target.value})
 }
 
@@ -140,7 +138,13 @@ render() {
                        Send {this.state.currencySendName} 
                     </div>
                         <div className= "inputCurr">
-                          <TextField variant="outlined" style={{ flex:0.5 }}  value={this.state.sendCoin} name="sendCoin" onChange = {this.onChange}  />
+                          <TextField 
+                            variant="outlined" 
+                            style={{ flex:0.5 }}  
+                            value={this.state.sendCoin} 
+                            name="sendCoin" 
+                            onChange = {this.onChange} 
+                        />
                           <Autocomplete
                             onChange = {(event, value)=>this.sendDrop(value)} 
                             id="currencySend"
@@ -181,7 +185,11 @@ render() {
                             </div> 
                         </div>
                         <div className = "outputCurr">
-                            <TextField variant="outlined" style={{ flex:0.5 }} disabled  value= {this.state.exchangeRate ? this.state.exchangeRate*this.state.sendCoin: "..."}/>
+                            <TextField 
+                                variant="outlined" 
+                                style={{ flex:0.5 }} 
+                                disabled  
+                                value= {this.state.exchangeRate ? this.state.exchangeRate*this.state.sendCoin: "..."}/>
                             <Autocomplete
                                 onChange = {(event, value)=>this.receiveDrop(value)} 
                                 id="currencyReceive"
@@ -189,13 +197,13 @@ render() {
                                 getOptionLabel={(option) => option.symbol }
                                 renderOption={option => (
                                     <div className="renderOption">
-                                    <div className="logoSize1">{<img src={option.logoUrl} className="logoSize" alt=""></img>}</div>
-                                    <div style={{padding:"20px", fontWeight:"bold"}}>{option.symbol.toUpperCase()}</div>
-                                    <div> {option.name}</div>
-                                </div>
-                            )}
-                            style={{ flex:0.4 }}
-                            renderInput={(params) => <TextField {...params} label={this.state.currencyReceive} variant="outlined" />}
+                                        <div className="logoSize1">{<img src={option.logoUrl} className="logoSize" alt=""></img>}</div>
+                                        <div style={{padding:"20px", fontWeight:"bold"}}>{option.symbol.toUpperCase()}</div>
+                                        <div> {option.name}</div>
+                                    </div>
+                                )}
+                                style={{ flex:0.4 }}
+                                renderInput={(params) => <TextField {...params} label={this.state.currencyReceive} variant="outlined" />}
                           />
                                 
                         </div>
@@ -206,10 +214,13 @@ render() {
 
                 </div>
                 {this.state.toasterFlag ? 
-                <Snackbar  open={this.state.toasterFlag}  onClose={this.handleClose} anchorOrigin={{ vertical: 'center', horizontal:'center'}}>
-                    <Alert onClose={this.handleClose} severity="error" style={{width: "700px"}}>
-                      {this.state.errorMsg}
-                    </Alert>
+                <Snackbar  
+                    open={this.state.toasterFlag}  
+                    onClose={this.handleClose} 
+                    anchorOrigin={{ vertical: 'center', horizontal:'center'}}>
+                        <Alert onClose={this.handleClose} severity="error" style={{width: "700px"}}>
+                          {this.state.errorMsg}
+                        </Alert>
                 </Snackbar>
                 : null }
 
@@ -263,7 +274,7 @@ render() {
                     </div>
 
                     <div className = "poweredBy">
-                        <div>powered by Simplex</div>
+                        <div>powered by {this.state.exchangeRate ? <span>Simplex</span> : "..."}</div>
                     </div>
                 </div>
 
@@ -272,6 +283,7 @@ render() {
                 <div className = "accept">
                     <div className= "termsCondition">
                         <Checkbox
+                            name="checkBox"
                             checked={this.state.checkBox}
                             onChange={this.handleCheckBox}
                             inputProps={{ 'aria-label': 'secondary checkbox' }}
